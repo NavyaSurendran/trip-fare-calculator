@@ -33,6 +33,12 @@ Once configured, from your terminal in the project root, run:
    ./gradlew run
 
 
+Assumptions
+
+1. Unque tap can be find by using busID and PAN
+2.  Invalid entries will be skipped.
+
+
 Trip Construction Logic:
 Trips are constructed by processing a chronologically sorted list of tap events using the following strategy:
 
