@@ -1,29 +1,51 @@
 package com.littlepay.tripfarecalculator.processor;
 
+import com.littlepay.tripfarecalculator.processor.model.Tap;
+import com.littlepay.tripfarecalculator.processor.model.Trip;
+import com.littlepay.tripfarecalculator.processor.builder.DefaultTripBuilder;
+import com.littlepay.tripfarecalculator.processor.builder.TripBuilder;
+import com.littlepay.tripfarecalculator.processor.model.TripStatus;
+import com.littlepay.tripfarecalculator.processor.reader.CsvTapReader;
+import com.littlepay.tripfarecalculator.processor.reader.TapReader;
+import com.littlepay.tripfarecalculator.processor.writer.CsvTripWriter;
+import com.littlepay.tripfarecalculator.processor.writer.TripWriter;
+import com.littlepay.tripfarecalculator.repository.FareRepository;
+
+import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class TripFareProcessor {
-    private static final Logger logger = Logger.getLogger(TripFareProcessor.class.getName());
+    private final TapReader tapReader;
+    private final TripBuilder tripBuilder;
+    private final TripWriter tripWriter;
+    private Logger logger = Logger.getLogger(TripFareProcessor.class.getName());
 
-    public static void main(String[] args) throws Exception {
-        FareRepository fareRepository = new FareRepository("fares.json");
-        TapReader reader = new CsvTapReader("taps.csv");
-        List<Tap> taps = reader.readTaps();
+    public TripFareProcessor(TapReader tapReader,
+                             TripBuilder tripBuilder, TripWriter tripWriter) {
+        this.tapReader = tapReader;
+        this.tripBuilder = tripBuilder;
+        this.tripWriter = tripWriter;
+    }
+    public double run() throws Exception {
+        List<Tap> taps = tapReader.readTaps();
+        List<Trip> trips = tripBuilder.buildTrips(taps);
+        tripWriter.writeTrips(trips);
 
-        TripBuilder builder = new DefaultTripBuilder(new DefaultFareCalculator(fareRepository));
-        List<Trip> trips = builder.buildTrips(taps);
-
-        TripWriter writer = new CsvTripWriter("trips.csv");
-        writer.writeTrips(trips);
-
-        Map<String, Long> summary = trips.stream()
+        return logSummary(trips);
+    }
+    private double logSummary(List<Trip> trips) {
+        Map<TripStatus, Long> summary = trips.stream()
                 .collect(Collectors.groupingBy(Trip::status, Collectors.counting()));
         double totalRevenue = trips.stream().mapToDouble(Trip::chargeAmount).sum();
 
         logger.info("Summary Report:");
-        summary.forEach((status, count) -> logger.info(status + ": " + count));
+        summary.forEach((status, count) -> logger.info(status.toString() + ": " + count));
         logger.info("Total Revenue: $" + totalRevenue);
+        return totalRevenue;
     }
+
+
 }

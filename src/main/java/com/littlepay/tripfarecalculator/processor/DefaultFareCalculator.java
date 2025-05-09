@@ -5,13 +5,18 @@ import com.littlepay.tripfarecalculator.repository.FareRepository;
 public class DefaultFareCalculator implements FareCalculator{
 
     private final FareRepository repository;
+
+    public DefaultFareCalculator(FareRepository repository) {
+        this.repository = repository;
+    }
+
     @Override
     public double calculateFare(String fromStop, String toStop) {
-        return 0;
+        return repository.getFare(fromStop, toStop);
     }
 
     @Override
     public double calculateMaxFare(String fromStop) {
-        return 0;
+        return repository.getMaxFareFrom(fromStop);
     }
 }
