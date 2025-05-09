@@ -30,7 +30,12 @@ Started,Finished,DurationSecs,FromStopId,ToStopId,ChargeAmount,CompanyId,BusID,P
 ```
 # Run the Application
 Once configured, from your terminal in the project root, run:
-   ./gradlew run
+```
+docker build -t my-gradle-app .
+docker run --rm my-gradle-app
+
+```
+
 
 
 Assumptions
