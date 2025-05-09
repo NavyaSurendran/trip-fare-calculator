@@ -23,7 +23,7 @@ dependencies {
 }
 
 application {
-    mainClass.set("com.littlepay.tripfarecalculator.TripFareProcessor")// Update to your actual main class
+    mainClass.set("com.littlepay.tripfarecalculator.processor.TripFareProcessorApp")
 }
 
 tasks.test {

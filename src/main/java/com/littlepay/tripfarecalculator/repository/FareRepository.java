@@ -18,15 +18,11 @@ public class FareRepository {
     public FareRepository(InputStream configInputStream) throws IOException {
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
          Map<String, List<TripFare>> yaml = mapper.readValue(configInputStream, Map.class);
-        // Map YAML to StopPair
         List<TripFare> fares = mapper.convertValue(yaml.get("fares"), mapper.getTypeFactory().constructCollectionType(List.class, TripFare.class));
 
         for (TripFare entry : fares) {
             fareMap.put(new StopPair(entry.from(), entry.to()), entry.fare());
         }
-        /*fareMap.put(new StopPair("Stop1", "Stop2"), 3.25);
-        fareMap.put(new StopPair("Stop2", "Stop3"), 5.50);
-        fareMap.put(new StopPair("Stop1", "Stop3"), 7.30);*/
     }
 
     public double getFare(String stopA, String stopB) {

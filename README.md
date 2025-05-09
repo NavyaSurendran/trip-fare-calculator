@@ -28,6 +28,10 @@ Started,Finished,DurationSecs,FromStopId,ToStopId,ChargeAmount,CompanyId,BusID,P
 22-01-2023 09:20:00,,0,Stop3,,$7.30,Company1,Bus36,4111111111111111,INCOMPLETE
 
 ```
+# Run the Application
+Once configured, from your terminal in the project root, run:
+``` ./gradlew run
+```
 
 Trip Construction Logic:
 Trips are constructed by processing a chronologically sorted list of tap events using the following strategy:
