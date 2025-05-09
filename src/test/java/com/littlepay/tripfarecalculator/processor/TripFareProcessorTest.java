@@ -56,12 +56,12 @@ public class TripFareProcessorTest {
         when(tripBuilder.buildTrips(taps)).thenReturn(trips);
 
         doNothing().when(tripWriter).writeTrips(trips);
-        double totalRevenue = tripFareProcessor.run();
+        tripFareProcessor.run();
 
         verify(tapReader, times(1)).readTaps();
         verify(tripBuilder, times(1)).buildTrips(taps);
         verify(tripWriter, times(1)).writeTrips(trips);
-        assertEquals(totalRevenue, 3.25);
+
     }
 
     private Tap buildTap(int id,

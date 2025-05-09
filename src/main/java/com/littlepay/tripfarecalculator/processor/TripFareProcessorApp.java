@@ -21,7 +21,6 @@ public class TripFareProcessorApp {
         TripWriter tripWriter = new CsvTripWriter("trips.csv");
 
         TripFareProcessor processor = new TripFareProcessor(tapReader, tripBuilder, tripWriter);
-        double totalrevenue = processor.run();
-        logger.info("Total Revenue: " + totalrevenue);
+        processor.run();
     }
 }

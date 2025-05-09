@@ -29,22 +29,19 @@ public class TripFareProcessor {
         this.tripBuilder = tripBuilder;
         this.tripWriter = tripWriter;
     }
-    public double run() throws Exception {
+    public void run() throws Exception {
         List<Tap> taps = tapReader.readTaps();
         List<Trip> trips = tripBuilder.buildTrips(taps);
         tripWriter.writeTrips(trips);
-
-        return logSummary(trips);
+        logSummary(trips);
     }
-    private double logSummary(List<Trip> trips) {
+    private void logSummary(List<Trip> trips) {
         Map<TripStatus, Long> summary = trips.stream()
                 .collect(Collectors.groupingBy(Trip::status, Collectors.counting()));
-        double totalRevenue = trips.stream().mapToDouble(Trip::chargeAmount).sum();
 
         logger.info("Summary Report:");
         summary.forEach((status, count) -> logger.info(status.toString() + ": " + count));
-        logger.info("Total Revenue: $" + totalRevenue);
-        return totalRevenue;
+
     }
 
 
